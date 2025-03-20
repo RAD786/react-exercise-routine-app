@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const EXERCISE_API_URL = "https://api.api-ninjas.com/v1/exercises";
 const API_KEY = "YOUR_API_KEY_HERE";
 
-// 🔹 Async thunk for fetching exercises
+
 export const fetchExercises = createAsyncThunk(
   "exercises/fetchExercises",
   async (query, { rejectWithValue }) => {
@@ -19,12 +19,12 @@ export const fetchExercises = createAsyncThunk(
   }
 );
 
-// 🔹 Slice for exercises state
+
 const exercisesSlice = createSlice({
   name: "exercises",
   initialState: {
     exercises: [],
-    status: "idle", // "idle" | "loading" | "succeeded" | "failed"
+    status: "idle",
     error: null,
   },
   reducers: {},

@@ -5,7 +5,7 @@ import exercisesReducer from "../features/exercisesSlice";
 export const store = configureStore({
   reducer: {
     routines: routinesReducer,
-    exercises: exercisesReducer, // ✅ Combine reducers here
+    exercises: exercisesReducer,
   },
 });
 

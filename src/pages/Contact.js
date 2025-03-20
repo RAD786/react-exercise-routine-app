@@ -41,7 +41,7 @@ const Contact = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            invalid={!!errors.name} // Adds red border if there's an error
+            invalid={!!errors.name}
           />
           {errors.name && <p className="text-danger">{errors.name}</p>}
         </FormGroup>

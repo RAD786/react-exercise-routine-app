@@ -20,7 +20,6 @@ const Exercises = () => {
       <h2>Exercise Library</h2>
       <p>Search for exercises by name.</p>
 
-      {/* Search Input */}
       <div className="d-flex mb-3">
         <Input
           type="text"
@@ -33,7 +32,6 @@ const Exercises = () => {
         </Button>
       </div>
 
-      {/* Exercise List Component */}
       <ExerciseList exercises={exercises} loading={status === "loading"} error={error} />
     </Container>
   );

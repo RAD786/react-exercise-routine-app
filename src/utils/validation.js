@@ -17,6 +17,6 @@ export const validateForm = (formData) => {
       errors.message = "Message must be at least 10 characters.";
     }
   
-    return errors; // Returns an object with validation errors
+    return errors;
   };
   
