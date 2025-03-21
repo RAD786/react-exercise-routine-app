@@ -1,40 +1,60 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addRoutine } from "../features/routinesSlice";
 import { validateRoutine } from "../utils/routineUtils";
-import { Form, Input, Button } from "reactstrap";
+import { Form, FormGroup, Input, Button, Alert, FormFeedback } from "reactstrap";
 
 const RoutineForm = () => {
-  const [routineName, setRoutineName] = useState("");
-  const [errors, setErrors] = useState({});
-  const routines = useSelector((state) => state.routines);
   const dispatch = useDispatch();
+  const routines = useSelector((state) => state.routines.routines);
+  const [routineName, setRoutineName] = useState("");
+  const [error, setError] = useState("");
+  const [showMaxRoutinesAlert, setShowMaxRoutinesAlert] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validateRoutine(routineName, routines);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    
+    const validationError = validateRoutine(routineName);
+    if (validationError) {
+      setError(validationError);
       return;
     }
+    
+    if (routines.length >= 3) {
+      setShowMaxRoutinesAlert(true);
+      setTimeout(() => setShowMaxRoutinesAlert(false), 3000);
+      return;
+    }
+    
     dispatch(addRoutine(routineName));
     setRoutineName("");
-    setErrors({});
+    setError("");
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="mb-3">
-      <Input
-        type="text"
-        value={routineName}
-        onChange={(e) => setRoutineName(e.target.value)}
-        placeholder="Enter Routine Name"
-      />
-      {errors.routineName && <p className="text-danger mt-1">{errors.routineName}</p>}
-      <Button color="primary" className="mt-2" type="submit">
-        Save Routine
-      </Button>
-    </Form>
+    <div className="mb-4">
+      {showMaxRoutinesAlert && (
+        <Alert color="warning" className="mb-3">
+          You can only create a maximum of 3 routines.
+        </Alert>
+      )}
+      
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Input
+            type="text"
+            placeholder="Enter routine name"
+            value={routineName}
+            onChange={(e) => setRoutineName(e.target.value)}
+            invalid={!!error}
+          />
+          {error && <FormFeedback>{error}</FormFeedback>}
+        </FormGroup>
+        <Button color="primary" type="submit">
+          Save Routine
+        </Button>
+      </Form>
+    </div>
   );
 };
 

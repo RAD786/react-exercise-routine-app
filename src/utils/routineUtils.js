@@ -1,19 +1,36 @@
-export const validateRoutine = (name, existingRoutines) => {
-    const errors = {};
-    if (!name.trim()) {
-      errors.routineName = "Routine name is required.";
-    }
-    if (existingRoutines.length >= 3) {
-      errors.maxRoutines = "You can only save up to 3 routines.";
-    }
-    return errors;
+// Validate exercise input
+export const validateExercise = (exercise) => {
+  const errors = {};
+  if (!exercise.name.trim()) {
+    errors.name = "Exercise name is required";
+  }
+  if (!exercise.sets || isNaN(exercise.sets) || Number(exercise.sets) <= 0) {
+    errors.sets = "Sets must be a positive number";
+  }
+  if (!exercise.reps || isNaN(exercise.reps) || Number(exercise.reps) <= 0) {
+    errors.reps = "Reps must be a positive number";
+  }
+  if (
+    exercise.weight &&
+    (isNaN(exercise.weight) || Number(exercise.weight) < 0)
+  ) {
+    errors.weight = "Weight must be a non-negative number";
+  }
+  return errors;
+};
+
+export const validateRoutine = (name) => {
+  if (!name.trim()) {
+    return "Routine name is required";
+  }
+  return "";
+};
+
+export const formatExerciseData = (exerciseData) => {
+  return {
+    name: exerciseData.name,
+    sets: Number(exerciseData.sets),
+    reps: Number(exerciseData.reps),
+    weight: exerciseData.weight ? Number(exerciseData.weight) : "",
   };
-  
-  export const validateExercise = (exercise) => {
-    const errors = {};
-    if (!exercise.name.trim()) errors.name = "Exercise name is required.";
-    if (!exercise.sets || exercise.sets < 1) errors.sets = "At least 1 set is required.";
-    if (!exercise.reps || exercise.reps < 1) errors.reps = "At least 1 rep is required.";
-    return errors;
-  };
-  
+};

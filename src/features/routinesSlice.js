@@ -1,54 +1,82 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const MAX_ROUTINES = 3;
+const initialState = {
+  routines: [],
+};
 
-const routinesSlice = createSlice({
+export const routinesSlice = createSlice({
   name: "routines",
-  initialState: [],
+  initialState,
   reducers: {
     addRoutine: (state, action) => {
-      if (state.length < MAX_ROUTINES) {
-        return [...state, { id: Date.now(), name: action.payload, exercises: [] }];
-      } else {
-        alert("Max 3 routines allowed.");
-        return state;
-      }
+      state.routines.push({
+        id: Date.now().toString(),
+        name: action.payload,
+        exercises: [],
+      });
     },
     deleteRoutine: (state, action) => {
-      return state.filter((routine) => routine.id !== action.payload);
+      state.routines = state.routines.filter(
+        (routine) => routine.id !== action.payload
+      );
+    },
+    updateRoutine: (state, action) => {
+      const { id, name } = action.payload;
+      const routine = state.routines.find(routine => routine.id === id);
+      if (routine) {
+        routine.name = name;
+      }
     },
     addExercise: (state, action) => {
       const { routineId, exercise } = action.payload;
-      return state.map((routine) =>
-        routine.id === routineId
-          ? { ...routine, exercises: [...routine.exercises, { id: Date.now(), ...exercise }] }
-          : routine
+      const routine = state.routines.find(
+        (routine) => routine.id === routineId
       );
-    },
-    editExercise: (state, action) => {
-      const { routineId, exerciseId, updatedExercise } = action.payload;
-      return state.map((routine) =>
-        routine.id === routineId
-          ? {
-              ...routine,
-              exercises: routine.exercises.map((ex) =>
-                ex.id === exerciseId ? { ...ex, ...updatedExercise } : ex
-              ),
-            }
-          : routine
-      );
+      if (routine) {
+        routine.exercises.push({
+          id: Date.now().toString(),
+          ...exercise,
+        });
+      }
     },
     deleteExercise: (state, action) => {
       const { routineId, exerciseId } = action.payload;
-      return state.map((routine) =>
-        routine.id === routineId
-          ? { ...routine, exercises: routine.exercises.filter((ex) => ex.id !== exerciseId) }
-          : routine
+      const routine = state.routines.find(
+        (routine) => routine.id === routineId
       );
+      if (routine) {
+        routine.exercises = routine.exercises.filter(
+          (exercise) => exercise.id !== exerciseId
+        );
+      }
+    },
+    updateExercise: (state, action) => {
+      const { routineId, exerciseId, exercise } = action.payload;
+      const routine = state.routines.find(
+        (routine) => routine.id === routineId
+      );
+      if (routine) {
+        const exerciseIndex = routine.exercises.findIndex(
+          (ex) => ex.id === exerciseId
+        );
+        if (exerciseIndex !== -1) {
+          routine.exercises[exerciseIndex] = {
+            ...routine.exercises[exerciseIndex],
+            ...exercise,
+          };
+        }
+      }
     },
   },
 });
 
-export const { addRoutine, deleteRoutine, addExercise, editExercise, deleteExercise } =
-  routinesSlice.actions;
+export const { 
+  addRoutine, 
+  deleteRoutine, 
+  updateRoutine,
+  addExercise, 
+  deleteExercise,
+  updateExercise 
+} = routinesSlice.actions;
+
 export default routinesSlice.reducer;
